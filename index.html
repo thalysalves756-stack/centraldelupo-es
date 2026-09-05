@@ -1,0 +1,599 @@
+import weasyprint
+from weasyprint import HTML
+
+html_content = """<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delupo Ferragens - A. Silva Ferragens LTDA</title>
+    <style>
+        :root {
+            --primary: #d97706;
+            --primary-dark: #b45309;
+            --secondary: #1e293b;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Top Header / Navigation */
+        header {
+            background-color: var(--secondary);
+            color: #ffffff;
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--secondary) 0%, #0f172a 100%);
+            color: #ffffff;
+            padding: 80px 5% 60px;
+            text-align: center;
+            border-bottom: 5px solid var(--primary);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        .badge-status {
+            display: inline-block;
+            background-color: #10b981;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--secondary);
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            padding: 30px 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Info Sections Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-card h3 {
+            font-size: 1.4rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--bg-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: right;
+        }
+
+        /* State Registrations Table */
+        .ie-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .ie-table th, .ie-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .ie-table th {
+            background-color: var(--bg-light);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .ie-table td {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Contact & Buttons */
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary);
+            color: #94a3b8;
+            padding: 40px 5% 20px;
+            font-size: 0.9rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .footer-box {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-box h4 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 20px auto 0;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span>DELUPO</span> FERRAGENS
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#servicos">Serviços</a></li>
+                    <li><a href="#registro">Informações</a></li>
+                    <li><a href="#inscricoes">Inscrições Estaduais</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge-status">Situação: Ativa</span>
+            <h1>Delupo Ferragens</h1>
+            <p>A. Silva Ferragens LTDA — Tradição, qualidade e fornecimento completo em ferramentas e ferragens industriais.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+
+        <!-- Topico Principais Serviços -->
+        <section id="servicos">
+            <div class="section-title">
+                <h2>Principais Serviços & Soluções</h2>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <span class="service-icon">🛠️</span>
+                    <h3>Ferragens & Ferramentas</h3>
+                    <p>Linha completa de ferramentas manuais, elétricas e pneumáticas para indústrias, oficinas e construção civil.</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">⚙️</span>
+                    <h3>Suprimentos Industriais</h3>
+                    <p>Fornecimento especializado de equipamentos de proteção (EPIs), abrasivos, soldas e fixadores de alta performance.</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🚚</span>
+                    <h3>Atacado & Distribuição</h3>
+                    <p>Logística ágil e atendimento corporativo especializado para entregas diretas e faturamento PJ em larga escala.</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🤝</span>
+                    <h3>Consultoria Técnica</h3>
+                    <p>Atendimento consultivo para especificação correta de insumos e ferramentas para a sua empresa.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Informações de Registro e Empresa -->
+        <section id="registro">
+            <div class="section-title">
+                <h2>Informações de Registro</h2>
+            </div>
+            <div class="info-grid">
+                <!-- Card Dados Cadastrais -->
+                <div class="info-card">
+                    <h3>🏢 Dados da Empresa</h3>
+                    <ul class="info-list">
+                        <li>
+                            <span class="info-label">Razão Social</span>
+                            <span class="info-value">A. Silva Ferragens LTDA</span>
+                        </li>
+                        <li>
+                            <span class="info-label">Nome Fantasia</span>
+                            <span class="info-value">Delupo Ferragens</span>
+                        </li>
+                        <li>
+                            <span class="info-label">CNPJ</span>
+                            <span class="info-value">02.492.310/0008-72</span>
+                        </li>
+                        <li>
+                            <span class="info-label">Tipo</span>
+                            <span class="info-value">Filial</span>
+                        </li>
+                        <li>
+                            <span class="info-label">Natureza Jurídica</span>
+                            <span class="info-value">Sociedade Empresária Limitada</span>
+                        </li>
+                        <li>
+                            <span class="info-label">Porte</span>
+                            <span class="info-value">Sem Enquadramento</span>
+                        </li>
+                        <li>
+                            <span class="info-label">Opção pelo MEI</span>
+                            <span class="info-value">Não</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Card Indicadores Financeiros & Datas -->
+                <div class="info-card">
+                    <h3>📊 Situação & Capital</h3>
+                    <ul class="info-list">
+                        <li>
+                            <span class="info-label">Situação Cadastral</span>
+                            <span class="info-value" style="color: #10b981;">Ativa</span>
+                        </li>
+                        <li>
+                            <span class="info-label">Data da Abertura</span>
+                            <span class="info-value">05/08/2021 (5 anos e 1 mês)</span>
+                        </li>
+                        <li>
+                            <span class="info-label">Data Situação Cadastral</span>
+                            <span class="info-value">05/08/2021</span>
+                        </li>
+                        <li>
+                            <span class="info-label">Capital Social</span>
+                            <span class="info-value">R$ 20.000.000,00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inscrições Estaduais -->
+        <section id="inscricoes">
+            <div class="section-title">
+                <h2>Inscrições Estaduais</h2>
+            </div>
+            <div class="info-card" style="margin-bottom: 60px;">
+                <p style="color: var(--text-muted); margin-bottom: 15px;">Registro fiscal atualizado nos estados de atuação e cobertura:</p>
+                <table class="ie-table">
+                    <thead>
+                        <tr>
+                            <th>Estado (UF)</th>
+                            <th>Inscrição Estadual (IE)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Minas Gerais (MG)</td>
+                            <td>004076349.01-48</td>
+                        </tr>
+                        <tr>
+                            <td>Paraíba (PB)</td>
+                            <td>16.905.145-5</td>
+                        </tr>
+                        <tr>
+                            <td>Pernambuco (PE)</td>
+                            <td>0984337-09</td>
+                        </tr>
+                        <tr>
+                            <td>Paraná (PR)</td>
+                            <td>09909788-40</td>
+                        </tr>
+                        <tr>
+                            <td>Rio Grande do Sul (RS)</td>
+                            <td>900/0057758</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Contato e Localização -->
+        <section id="contato">
+            <div class="section-title">
+                <h2>Contato & Localização</h2>
+            </div>
+            <div class="info-grid">
+                <!-- Canais de Contato -->
+                <div class="info-card">
+                    <h3>📞 Canais de Atendimento</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">Entre em contato diretamente com a nossa equipe comercial e de suporte.</p>
+                    
+                    <p><strong>E-mail:</strong> sac@delupo.com.br</p>
+                    <a href="mailto:sac@delupo.com.br" class="contact-btn btn-primary">✉️ Enviar E-mail</a>
+
+                    <br>
+                    <p><strong>Telefone:</strong> (48) 3431-5800</p>
+                    <a href="tel:4834315800" class="contact-btn btn-outline">📞 Ligar Agora</a>
+                </div>
+
+                <!-- Endereço -->
+                <div class="info-card">
+                    <h3>📍 Localização</h3>
+                    <p><strong>Logradouro:</strong> Rodovia Luiz Rosso, 3610</p>
+                    <p><strong>Bairro:</strong> Primeira Linha</p>
+                    <p><strong>Município:</strong> Criciúma - SC</p>
+                    <p><strong>CEP:</strong> 88816-510</p>
+                    
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid var(--border-color);">
+
+                    <p style="font-size: 0.9rem; color: var(--text-muted);"><strong>Endereço para correspondência:</strong><br>
+                    Delupo Ferragens A. Silva Ferragens LTDA<br>
+                    Rodovia Luiz Rosso 3610 — Primeira Linha<br>
+                    Criciúma SC | CEP 88816-510</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-box">
+                <h4>Delupo Ferragens</h4>
+                <p>A. Silva Ferragens LTDA</p>
+                <p>CNPJ: 02.492.310/0008-72</p>
+            </div>
+            <div class="footer-box">
+                <h4>Endereço Principal</h4>
+                <p>Rodovia Luiz Rosso, 3610</p>
+                <p>Primeira Linha — Criciúma/SC</p>
+                <p>CEP: 88816-510</p>
+            </div>
+            <div class="footer-box">
+                <h4>Atendimento</h4>
+                <p>E-mail: sac@delupo.com.br</p>
+                <p>Telefone: (48) 3431-5800</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; Delupo Ferragens — Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("Arquivo index.html criado com sucesso.")
